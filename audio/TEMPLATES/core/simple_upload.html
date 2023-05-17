@@ -16,7 +16,11 @@
         <label class="custom-file-label" for="{{form.audio_file.id_for_label}}">Choose file</label>
 
         {% if form.audio_file.errors %}
-          <div class="error-message">{{ form.audio_file.errors }}</div>
+
+          <div class="form-group">
+            <div class="alert alert-light">{{ form.audio_file.errors }}</div>
+          </div>
+
         {% endif %}
       </div>
       <div class="button-container">

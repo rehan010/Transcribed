@@ -5,18 +5,23 @@
     <div class="container">
       {% for document in documents %}
         <div class="card">
-          <a href="{% url 'document_delete' document.pk %}" class="btn btn-dark">Delete</a>
+          <div class="card-header d-flex justify-content-between align-items-center">
+              <div>
+                  {{ document.description }}
+                  <span class="badge badge-pill badge-light">{{ document.uploaded_at }}</span>
+              </div>
+              <a href="{% url 'document_delete' document.pk %}" class="btn btn-dark">Delete</a>
+          </div>
 
           <div class="card-body">
-            <h1>{{ document.description }}</h1>
-            <span>{{ document.uploaded_at }}</span>
-            <br><br>
-            <audio controls>
-              <source src="/media/{{ document.audio_file }}" type="audio/mpeg">
-              Your browser does not support the audio element.
-            </audio>
-            <p>{{ document.audio_text }}</p>
-            <!-- Display other fields of the Document model as needed -->
+              <div class="d-flex align-items-center">
+                  <audio controls>
+                        <source src="/media/{{ document.audio_file }}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                  </audio>
+              </div>
+              <br>
+              <p class="card-text">{{ document.audio_text }}</p>
           </div>
         </div>
         <br>
