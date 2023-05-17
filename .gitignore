@@ -1,0 +1,7 @@
+audio/migrations/*
+*.log
+*.pot
+*.pyc
+__pycache__/
+media/*
+static/*

@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <div class="upload-form">
+    <form id="upload-form" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="{{ form.description.id_for_label }}">Name:</label>
+        {{ form.description }}
+        {% if form.description.errors %}
+          <div class="error-message">{{ form.description.errors }}</div>
+        {% endif %}
+      </div>
+      <div class="custom-file mb-3">
+        {{ form.audio_file }}
+        <label class="custom-file-label" for="{{form.audio_file.id_for_label}}">Choose file</label>
+
+        {% if form.audio_file.errors %}
+          <div class="error-message">{{ form.audio_file.errors }}</div>
+        {% endif %}
+      </div>
+      <div class="button-container">
+        <button id="submit-button" class="upload-button" type="submit">Upload</button>
+        <button id="loading-button" class="loading-button" >
+          <span class="spinner-grow spinner-grow-sm"></span>
+          Loading..
+        </button>
+      </div>
+    </form>
+
+    <p class="return-link"><a href="{% url 'home' %}">Return to home</a></p>
+  </div>
+
+  <script>
+    document.getElementById("upload-form").addEventListener("submit", function() {
+      // Show the loader
+      document.getElementById("submit-button").style.display = "none";
+      document.getElementById("loading-button").style.display = "block";
+    });
+    $(".custom-file-input").on("change", function() {
+      var fileName = $(this).val().split("\\").pop();
+      $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+
+  </script>
+{% endblock %}

@@ -1,0 +1,124 @@
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center; /* Center the content horizontally */
+        }
+        header h1 {
+            margin: 0;
+            padding: 0;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        main {
+            flex: 1; /* Expand to fill remaining vertical space */
+            margin: 20px;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+
+          .upload-form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+          }
+
+          .form-group {
+            margin-bottom: 15px;
+          }
+
+          .form-group label {
+            display: block;
+            margin-bottom: 5px;
+          }
+
+          .form-group input[type="text"],
+          .form-group input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+          }
+
+          .error-message {
+            color: red;
+            margin-top: 5px;
+          }
+
+          .button-container {
+            position: relative;
+          }
+
+          .upload-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #333;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+          }
+
+          .loading-button {
+            display: none;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #333;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+          }
+
+        .return-link {
+          margin-top: 10px;
+          text-align: center;
+        }
+        .return-link a{
+          color: #333;
+        }
+        .hover-link:hover {
+          color: #fff; /* Color on hover */
+          text-decoration: underline; /* Underline on hover */
+        }
+
+
+

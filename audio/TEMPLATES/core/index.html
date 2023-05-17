@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  {% if text %}
+    <div class="container">
+      <h1>Transcribed Text</h1>
+      <p>{{ text }}</p>
+    </div>
+  {% endif %}
+
+  {% if audio %}
+    <div class="container">
+      <h1>Transcribed Audio</h1>
+      <audio controls>
+        <source src="/media/{{ audio }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+  {% endif %}
+
+  {% if documents %}
+    <div class="container">
+      {% for document in documents %}
+        <div class="card">
+          <a href="{% url 'document_delete' document.pk %}" class="btn btn-dark">Delete</a>
+
+          <div class="card-body">
+            <h1>{{ document.description }}</h1>
+            <span>{{ document.uploaded_at }}</span>
+            <br><br>
+            <audio controls>
+              <source src="/media/{{ document.audio_file }}" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+            <p>{{ document.audio_text }}</p>
+            <!-- Display other fields of the Document model as needed -->
+          </div>
+        </div>
+        <br>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <br><br><br><br>
+{% endblock %}
