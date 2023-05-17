@@ -1,8 +1,8 @@
 # Create your views here.
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from .forms import DocumentForm,DocumentTextForm
-from django.views.generic import View, TemplateView,DeleteView
+from django.views.generic import FormView, TemplateView,DeleteView
 import speech_recognition as sr
 from pathlib import Path
 from .models import *
@@ -10,22 +10,24 @@ from gtts import gTTS
 import os
 from django.utils import timezone
 from django.urls import reverse_lazy
+from django.core.exceptions import ValidationError
+from django import forms
 
 
 def transcribe_audio(audio_file):
     # Create a recognizer instance
     recognizer = sr.Recognizer()
     try:
-
         with audio_file.open('rb') as file_obj:
             with sr.AudioFile(file_obj) as source:
                 audio_data = recognizer.record(source)
                 text = recognizer.recognize_google(audio_data)
                 return text
+
     except sr.UnknownValueError:
-        print("Speech recognition could not understand audio")
+        raise forms.ValidationError("Speech recognition could not understand audio")
     except sr.RequestError as e:
-        print(f"Could not request results from the Google Speech Recognition service: {e}")
+        raise forms.ValidationError(f"Could not request results from the Google Speech Recognition service: {e}")
 
 
 def text_to_audio(data):
@@ -48,34 +50,34 @@ class HomeView(TemplateView):
     template_name = 'core/index.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        documents = Document.objects.all()
+        documents = Document.objects.order_by('-uploaded_at')
         context['documents'] = documents
         return context
 
 
-class ModelFormUploadView(TemplateView):
+class ModelFormUploadView(FormView):
     template_name = 'core/simple_upload.html'
+    form_class = DocumentForm
+    success_url = '/home'
 
-    def get(self, request, *args, **kwargs):
-        form = DocumentForm()
-        return render(request, self.template_name, {'form': form})
+    def form_valid(self, form):
+        audio_file = form.cleaned_data['audio_file']
+        description = form.cleaned_data['description']
 
-    def post(self, request, *args, **kwargs):
-        form = DocumentForm(request.POST, request.FILES)
-        if form.is_valid():
-            data=form.save()
-            media_root = settings.MEDIA_ROOT
-            file_path = Path(media_root) / 'audio' / form.cleaned_data['audio_file'].name
-            text=transcribe_audio(file_path)
+        try:
+            data = form.save()
+            text = transcribe_audio(audio_file)
 
             if text:
-                document=Document.objects.get(pk=data.pk)
-                document.audio_text=text
+                document = get_object_or_404(Document, pk=data.pk)
+                document.audio_text = text
                 document.save()
-                return render(request, 'core/index.html', {'text': text})
+                return redirect(self.success_url)
 
-        return render(request, self.template_name, {'form': form})
+        except (ValueError, sr.UnknownValueError, sr.RequestError) as e:
+            form.add_error('audio_file', str(e))
 
+        return super().form_invalid(form)
 
 class ModelFormTextView(TemplateView):
     template_name = 'core/simple_text.html'
