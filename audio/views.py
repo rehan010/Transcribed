@@ -79,21 +79,16 @@ class ModelFormUploadView(FormView):
 
         return super().form_invalid(form)
 
-class ModelFormTextView(TemplateView):
+
+class ModelFormTextView(FormView):
     template_name = 'core/simple_text.html'
+    form_class = DocumentTextForm
+    success_url = '/home'
 
-    def get(self, request, *args, **kwargs):
-        form = DocumentTextForm()
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request, *args, **kwargs):
-        form = DocumentTextForm(request.POST)
-        if form.is_valid():
-            data=form.save()
-            filename=text_to_audio(data)
-            return render(request, 'core/index.html', {'audio': 'audio/'+filename})
-
-        return render(request, self.template_name, {'form': form})
+    def form_valid(self, form):
+        data = form.save()
+        filename = text_to_audio(data)
+        return redirect(self.success_url)
 
 
 class DocumentDeleteView(DeleteView):

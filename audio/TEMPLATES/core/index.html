@@ -1,21 +1,5 @@
 {% extends 'core/base.html' %}
 {% block content %}
-  {% if text %}
-    <div class="container">
-      <h1>Transcribed Text</h1>
-      <p>{{ text }}</p>
-    </div>
-  {% endif %}
-
-  {% if audio %}
-    <div class="container">
-      <h1>Transcribed Audio</h1>
-      <audio controls>
-        <source src="/media/{{ audio }}" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>
-    </div>
-  {% endif %}
 
   {% if documents %}
     <div class="container">
@@ -38,6 +22,7 @@
         <br>
       {% endfor %}
     </div>
+
   {% endif %}
 
   <br><br><br><br>
