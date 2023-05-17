@@ -28,6 +28,22 @@ def transcribe_audio(audio_file):
         print(f"Could not request results from the Google Speech Recognition service: {e}")
 
 
+def text_to_audio(data):
+    media_root = settings.MEDIA_ROOT
+    text = data.audio_text
+    tts = gTTS(text=text, lang='en')
+    # Set the save path for the audio file
+    save_path = Path(media_root) / 'audio'
+    timestamp = timezone.now().strftime('%Y%m%d%H%M%S')
+    filename = f'{timestamp}.mp3'
+    file_path = os.path.join(save_path, filename)
+    tts.save(file_path)
+    document = Document.objects.get(pk=data.pk)
+    document.audio_file = 'audio/' + filename
+    document.save()
+    return filename
+
+
 class HomeView(TemplateView):
     template_name = 'core/index.html'
     def get_context_data(self, **kwargs):
@@ -72,18 +88,7 @@ class ModelFormTextView(TemplateView):
         form = DocumentTextForm(request.POST)
         if form.is_valid():
             data=form.save()
-            media_root = settings.MEDIA_ROOT
-            text=data.audio_text
-            tts = gTTS(text=text, lang='en')
-            # Set the save path for the audio file
-            save_path = Path(media_root) / 'audio'
-            timestamp = timezone.now().strftime('%Y%m%d%H%M%S')
-            filename = f'{timestamp}.mp3'
-            file_path = os.path.join(save_path, filename)
-            tts.save(file_path)
-            document=Document.objects.get(pk=data.pk)
-            document.audio_file='audio/'+filename
-            document.save()
+            filename=text_to_audio(data)
             return render(request, 'core/index.html', {'audio': 'audio/'+filename})
 
         return render(request, self.template_name, {'form': form})

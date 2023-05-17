@@ -28,7 +28,8 @@ from gtts import gTTS
 import os
 from pathlib import Path
 
-def text_to_audio(data, media_root):
+def text_to_audio(data):
+    media_root = settings.MEDIA_ROOT
     text = data.audio_text
     tts = gTTS(text=text, lang='en')
     # Set the save path for the audio file
@@ -37,4 +38,9 @@ def text_to_audio(data, media_root):
     filename = f'{timestamp}.mp3'
     file_path = os.path.join(save_path, filename)
     tts.save(file_path)
+    document = Document.objects.get(pk=data.pk)
+    document.audio_file = 'audio/' + filename
+    document.save()
+    return filename
+
 ```
