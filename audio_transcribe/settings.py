@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_elasticsearch_dsl',
     'audio'
 ]
 
@@ -112,6 +113,13 @@ USE_I18N = True
 
 USE_TZ = True
 
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts': 'http://elastic:mjnY5sb3udT+JyE4k+DJ@localhost:9200',
+        # 'username':'elastic',
+        # 'password':'mjnY5sb3udT+JyE4k+DJ'
+    },
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

@@ -12,7 +12,7 @@ from django.utils import timezone
 from django.urls import reverse_lazy
 from django.core.exceptions import ValidationError
 from django import forms
-
+from .elastic import CategoryDocument
 
 def transcribe_audio(audio_file):
     # Create a recognizer instance
@@ -50,7 +50,8 @@ class HomeView(TemplateView):
     template_name = 'core/index.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        documents = Document.objects.order_by('-uploaded_at')
+        documents=CategoryDocument.search().to_queryset().order_by('-uploaded_at')
+        # documents = Document.objects.order_by('-uploaded_at')
         context['documents'] = documents
         return context
 
